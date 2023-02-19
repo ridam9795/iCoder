@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 
 
 def home(request):
-    allPosts = Post.objects.all()
-    context = {"allPosts": allPosts[:2]}
+    allPosts = Post.objects.all().order_by('-views').values()
+    context = {"allPosts": allPosts[:3]}
     return render(request, 'home/home.html', context)
 
 

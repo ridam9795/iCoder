@@ -7,9 +7,8 @@
 <div class="container my-3">
     <div class="blog-post">
         <h2 class="blog-post-title">{{post.title}}</h2>
-        <p class="blog-post-meta">{{post.timeStamp}} by <a href="#">{{post.author}}</a></p>
-
-        <p>{{post.content}}</p>
+        <p class="blog-post-meta">{{post.timeStamp}} by <a href="#">{{post.author}}</a> (<span>{{post.views}} views</span>)</p>
+        <p>{{post.content|safe}}</p>
         <hr>
     </div>
 </div>
@@ -42,10 +41,12 @@
             <b> {{comment.user.username}} </b> <span
                 class="badge badge-secondary ">{{comment.timestamp|naturaltime}}</span>
             <div> {{comment.comment}} </div>
+            {% if user.is_authenticated %}
             <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
                 data-target="#replyBox{{comment.sno}}" aria-expanded="false" aria-controls="replyBox{{comment.sno}}">
                 Reply
             </button>
+        
             <div class="collapse" id="replyBox{{comment.sno}}">
                 <div class="card card-body my-2">
                     <form action="/blog/postComment" method="post">
@@ -60,10 +61,26 @@
                     </form>
                 </div>
             </div>
-            <div class="replies bg-danger my-2 ">
+            {% else %}
+            <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse" data-target="#replyBox{{comment.sno}}"
+                aria-expanded="false" aria-controls="replyBox{{comment.sno}}" disabled>
+                Login to Reply
+            </button>
+            {% endif %}
+            <div class="replies my-2 ">
                 {% for reply in replyDict|get_val:comment.sno %}
-                {{reply}}
-                <br>
+                <div class="row my-2">
+                    <div class="col-md-1 ">
+                        <img class="rounded mx-auto d-block w-75 my-2 border border-dark p-2" src="/static/img/user.jpg" alt="user">
+                    </div>
+                    <div class="col-md-11">
+                        <div class="col-md-11 ">
+                            <b> {{reply.user.username}} </b> <span class="badge badge-secondary ">{{reply.timestamp|naturaltime}}</span>
+                            <div>{{reply.comment}}</div>
+                        </div>
+                        <br>
+                    </div>
+                    </div>
                 {% endfor %}
             </div>
         </div>

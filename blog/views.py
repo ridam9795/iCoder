@@ -7,6 +7,17 @@ from blog.templatetags import extras
 
 
 def blogHome(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        content = request.POST.get("postContent")
+        user = request.user
+        views = 0
+        print("postHeading: "+title+" --> "+content)
+        post = Post(title=title, content=content,
+                    author=user, views=views, slug=title)
+        post.save()
+
+        return redirect('/')
     allPosts = Post.objects.all()
     context = {"allPosts": allPosts}
     return render(request, 'blog/blogHome.html', context)

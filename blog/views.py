@@ -19,7 +19,7 @@ def blogHome(request):
 
         return redirect('/')
     allPosts = Post.objects.all()
-    context = {"allPosts": allPosts}
+    context = {"allPosts": allPosts, 'user': request.user}
     return render(request, 'blog/blogHome.html', context)
 
 
